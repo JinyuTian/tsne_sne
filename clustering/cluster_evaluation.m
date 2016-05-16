@@ -6,18 +6,22 @@ function [cluster_labels,cluster_para]=cluster_evaluation(method,X,labels,gridSe
 %   Kmin and Kmax: minimum and maximum numbers of clusters
 %   if gridSearch is false, the para is formed as followed:
 %   k-means: [K]: numbers of clustering
-%   GMM:[K covariant_matrix_type]:1 for diagnal, 2 for
-%   full
+%   GMM:[K covariant_matrix_type]: covariant_matrix_type:1 for diagnal, 2 for full
+%   
 % 
 %   output:
 %       cluster_lables: labels got from culstering
-%       para: relevant information from the specific algorithm, for the
-%       gridSearch case, only return the cluster_para{1}=[mus,std]; mus:3-by-K matrix
+%       cluster_para: relevant information from the specific algorithm, for the
+%       gridSearch case, only return the cluster_para
+%       k-means:
+%       cluster_para{1}=[mus,std]; mus:3-by-K matrix
 %       for rss-aic-bic mean; std: 3-by-K matrix for std of rss-aic-bic,
 %       cluster_para{2} for the F-measure
-% 
-% 
-% 
+%       GMM:
+%       cluster_para=[mus,stds]: mus and stds are 2-by-k matrixes for aic-bic
+%       If the gridSearch is not implemented:
+%       k-means: center of the clusters
+%       GMM: the GMM model 
 %
 % 
 
@@ -101,11 +105,11 @@ elseif strcmp(method,'GMM')
         stds=zeros(2,length(KRange));
         temp=zeros(2,repeats);
         % run GMM 
-        for i=1:length(KRange)
+        for i=para(2):para(3)
             for j=1:repeats
-                obj=gmdistribution.fit(X,i,'Start','randSample','CovType','full');
-                temp(1,j)= obj.AIC;
-                temp(2,j)= obj.BIC;
+                obj{i}=gmdistribution.fit(X,i,'Start','randSample','CovType','full');
+                temp(1,j)= obj{i}.AIC;
+                temp(2,j)= obj{i}.BIC;
             end
             mus(1,i)=mean(temp(1,:));
             mus(2,i)=mean(temp(2,:));
@@ -129,7 +133,7 @@ elseif strcmp(method,'GMM')
         if size(X,2)==2
             scatter(X(:,1),X(:,2),10,labels,'filled')
             hold on
-            h=ezcontour(@(x,y)pdf(obj{numComponents},[x y]),[min(X(:,1))-2 max(X(:,1))+2],[min(X(:,2))-2 max(X(:,2))+2]);
+            h=ezcontour(@(x,y)pdf(obj{numComponents},[x y]),[min(X(:,1))-2, max(X(:,1))+2],[min(X(:,2))-2, max(X(:,2))+2]);
         end
     else 
         switch para(2)
