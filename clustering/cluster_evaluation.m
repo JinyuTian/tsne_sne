@@ -18,7 +18,7 @@ function [cluster_labels,cluster_para]=cluster_evaluation(method,X,labels,gridSe
 % 
 % 
 % 
-
+%
 % 
 
 if ~exist('method', 'var')
@@ -76,7 +76,7 @@ if strcmp(method,'k-means')
 
             for i = 1:repeat
                 [result] = ml_clustering(X,options,'start','sample','Distance','sqeuclidean');
-                F(i) = ml_Fmeasure(result.labels,train_labels);
+                F(i) = ml_Fmeasure(result.labels,labels);
             end
             means(k,1) = mean(F);
             stds(k,1) = std(F);
@@ -127,9 +127,9 @@ elseif strcmp(method,'GMM')
         figure()
         [minAIC,numComponents] = min(mus(1,:));
         if size(X,2)==2
-            scatter(X(:,1),X(:,2),10,train_labels,'filled')
+            scatter(X(:,1),X(:,2),10,labels,'filled')
             hold on
-            ezcontour(@(x,y)pdf(obj{numComponents},[x y]),[min(X(:,1))-2 max(X(:,1))+2],[min(X(:,2))-2 max(X(:,2))+2]);
+            h=ezcontour(@(x,y)pdf(obj{numComponents},[x y]),[min(X(:,1))-2 max(X(:,1))+2],[min(X(:,2))-2 max(X(:,2))+2]);
         end
     else 
         switch para(2)
@@ -142,16 +142,11 @@ elseif strcmp(method,'GMM')
         post_p=[];
         for i=1:para(1)
            gm=gmdistribution(obj.mu(i,:),obj.Sigma(:,:,i),1);
-           post_p=[post_p pdf(gm,X)*obj.PComponents(i)]
+           post_p=[post_p pdf(gm,X)*obj.PComponents(i)];
         end
-        [Y,labels]=max(post_p,[],2);
+        [Y,cluster_labels]=max(post_p,[],2);
         
     end
 end
-
-
-
-
-
 
 end
