@@ -1,4 +1,4 @@
-function x=gmmFmeasure(cluster_labels, labels)
+function fmeasure=gmmFmeasure(cluster_labels, labels)
 % This function is used to calculate the f-measure in clustering
 % Input:
 %     cluster_labels are the labels generated from clustering(cluster_labels>0)
@@ -48,14 +48,13 @@ function x=gmmFmeasure(cluster_labels, labels)
             P(i,k)=N(i,k)/K(k);
         end
     end
-    R
-    P
+
     F=zeros(nc,nk);
     for i=1:nc
         for k=1:nk
             F(i,k)=2*R(i,k)*P(i,k)/(R(i,k)+P(i,k));
         end
     end
-    y=sum(C.*max(F,[],2))/M;
+    fmeasure=sum(C.*max(F,[],2))/M;
 end
 
