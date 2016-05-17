@@ -140,8 +140,7 @@ elseif strcmp(method,'GMM')
         figure()
         errorbar(KRange,mus(3,:),stds(3,:),'g--s')
         title('F1-Measure using GMM')
-        ylabel('F1-Measure')
-        xlabel('Number of clusters')
+        ylabel
         
 
         %Plot the best fitting
