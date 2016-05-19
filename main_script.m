@@ -27,12 +27,22 @@ Y_sne = sne(x, labels, no_dims, perp);
 %% CLUSTERING
 %evaluation of the algorithm
 label=labels+1;
-numComponents=max(label);
+
+%using the number of the labels to do clustering evaluation
+numComponents_sne=max(label);
+numComponents_tsne=max(label);
+
+%using the number of the labels we got from F1-measure to do clusering evaluation
+% [mus_sne,stds_sne]=cluster_evaluation(Y_sne,label,[30 1 5]);
+% [mus_tsne,std_tsne]=cluster_evaluation(Y_tsne,label,[30 1 5]);
+% [temp,numComponents_tsne]=max(mus_tsne(3,:));
+% [temp,numComponents_sne]=max(mus_sne(3,:));
+
 error_sne=zeros(10,1);
 error_tsne=zeros(10,1);
 for i=1:10
-    [model_sne,cluster_labels_sne]=gmmFitting(Y_sne,[numComponents 2]);
-    [model_tsne,cluster_labels_tsne]=gmmFitting(Y_tsne,[numComponents 2]);
+    [model_sne,cluster_labels_sne]=gmmFitting(Y_sne,[numComponents_sne 2]);
+    [model_tsne,cluster_labels_tsne]=gmmFitting(Y_tsne,[numComponents_tsne 2]);
     error_sne(i)=labelComparison(label,cluster_labels_sne)/length(label);
     error_tsne(i)=labelComparison(label,cluster_labels_tsne)/length(label);
 end
@@ -46,8 +56,8 @@ pause
 
 % ----validation of the clustering-------
 label=labels+1;
-[mus_sne,stds_sne]=cluster_evaluation(Y_sne,label,[10 1 4]);
-[mus_tsne,std_tsne]=cluster_evaluation(Y_tsne,label,[10 1 4]);
+[mus_sne,stds_sne]=cluster_evaluation(Y_sne,label,[20 1 4]);
+[mus_tsne,std_tsne]=cluster_evaluation(Y_tsne,label,[20 1 4]);
 cluster_comparison(mus_sne,stds_sne,mus_tsne,std_tsne);
 %% print and save data
 
