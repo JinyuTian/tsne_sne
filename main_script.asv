@@ -25,11 +25,32 @@ Y_tsne = tsne(x, labels, no_dims, initial_dims, perp);
 %% sne
 Y_sne = sne(x, labels, no_dims, perp);
 %% CLUSTERING
-%evaluation of the algorithm
-label=labels+1;
-para='v'; %validation or evaluation
+label=labels+1; %Only of Iris model
+para='evaluation'; %validation or evaluation
 cluster_evaluation(Y_sne,Y_tsne,label,para);
+%% CLASSIFICATION
+%training data
+training_ratio=0.5;
+ind=randperm(size(Y_tsne,1));
+train_sne=Y_sne(ind(1:ceil(size(Y_sne,1)*training_ratio)),:);
+test_sne=Y_sne(ind(ceil(size(Y_sne,1)*training_ratio):end),:);
+train_tsne=Y_tsne(ind(1:ceil(size(Y_tsne,1)*training_ratio)),:);
+test_tsne=Y_tsne(ind(ceil(size(Y_tsne,1)*training_ratio):end),:);
+train_labels=labels(ind(1:ceil(size(Y_tsne,1)*training_ratio)));
+test_labels=labels(ind(ceil(size(Y_tsne,1)*training_ratio):end));
 
+%nu-svm
+model_sne=svmtrain(train_labels,train_sne,'-s 1 -t 2 -c 1 -g 1 -n 0.1'); %-s method -t kernel type -c cost -g gamma -v n-fold cross validation -n nu
+model_tsne=svmtrain(train_labels,train_tsne,'-s 1 -t 2 -c 1 -g 1 -n 0.1' );
+disp('training outcomes')
+model_sne
+model_tsne
+
+%testing
+disp('testing sne')
+[predicted_label_sne, accuracy_sne, decision]=svmpredict(test_labels,test_sne,model_sne);
+disp('testing tsne')
+[predicted_label_tsne, accuracy_tsne, decision]=svmpredict(test_labels,test_tsne,model_sne);
 
 %% print and save data
 

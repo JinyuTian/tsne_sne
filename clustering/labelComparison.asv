@@ -1,6 +1,0 @@
-function N=labelComparison(labels,cluster_labels)
-%find out how many different labels there are
-clustering=zeros(max(labels),max(cluster))
-[rows,cols,vals]=find(labels==1);
-N=length(vals)
-end
