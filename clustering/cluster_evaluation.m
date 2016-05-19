@@ -54,30 +54,7 @@ if min(labels)>=0
         stds(2,i)=std(temp(2,:));
         stds(3,i)=std(temp(3,:));
     end
-    % Plot AIC BIC
-    figure()
-    errorbar(KRange,mus(1,:),stds(1,:),'r--s');
-    hold on
-    errorbar(KRange,mus(2,:),stds(2,:),'g--s');
-    legend('AIC','BIC');
-    title('AIC and BIC using GMM')
-    ylabel('AIC & BIC')
-    xlabel('Number of clusters')
-    figure()
-    errorbar(KRange,mus(3,:),stds(3,:),'g--s')
-    title('F1-Measure using GMM')
-    ylabel('F1-Measure')
-    xlabel('Number of clusters')
 
-    %Plot the best fitting
-    figure()
-    [minAIC,numComponents] = min(mus(1,:));
-    if size(X,2)==2
-        scatter(X(:,1),X(:,2),10,labels,'filled')
-        hold on
-        h=ezcontour(@(x,y)pdf(obj{numComponents},[x y]),[min(X(:,1))-2, max(X(:,1))+2],[min(X(:,2))-2, max(X(:,2))+2]);
-        title('Best fitting according to AIC')
-    end
 elseif minlabels==0
         % Fit data to GMM model with full covariance matrix
     repeats=para(1);
@@ -101,21 +78,6 @@ elseif minlabels==0
         end
         mus(1,i)=mean(temp(1,:));
         stds(1,i)=std(temp(1,:));
-    end
-    figure()
-    errorbar(KRange,mus(1,:),stds(1,:),'g--s')
-    title('F1-Measure using GMM')
-    ylabel('F1-Measure')
-    xlabel('Number of clusters')
-
-    %Plot the best fitting
-    figure()
-    [minAIC,numComponents] = min(mus(1,:));
-    if size(X,2)==2
-        scatter(X(:,1),X(:,2),10,labels,'filled')
-        hold on
-        h=ezcontour(@(x,y)pdf(obj{numComponents},[x y]),[min(X(:,1))-2, max(X(:,1))+2],[min(X(:,2))-2, max(X(:,2))+2]);
-        title('Best fitting according to F1-measure')
     end
 else
     disp('Invalid labels')
