@@ -115,7 +115,7 @@ elseif minlabels==0
         scatter(X(:,1),X(:,2),10,labels,'filled')
         hold on
         h=ezcontour(@(x,y)pdf(obj{numComponents},[x y]),[min(X(:,1))-2, max(X(:,1))+2],[min(X(:,2))-2, max(X(:,2))+2]);
-        title('Best fitting according to AIC')
+        title('Best fitting according to F1-measure')
     end
 else
     disp('Invalid labels')
