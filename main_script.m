@@ -25,11 +25,22 @@ Y_tsne = tsne(x, labels, no_dims, initial_dims, perp);
 %% sne
 Y_sne = sne(x, labels, no_dims, perp);
 %% CLUSTERING
-[mus_sne,stds_sne]=cluster_evaluation(Y_sne,labels,[10 1 5]);
-[mus_tsne,std_tsne]=cluster_evaluation(Y_tsne,labels,[10 1 5]);
+%evaluation of the algorithm
+label=labels+1;
+numComponents=max(label);
+[model_sne,cluster_labels_sne]=gmmFitting(Y_sne,[numComponents 2]);
+[model_tsne,cluster_labels_tsne]=gmmFitting(Y_tsne,[numComponents 2]);
+error_sne=labelComparison(label,cluster_labels_sne)/length(label)
+error_tsne=labelComparison(label,cluster_labels_tsne)/length(label)
 
-[maxFmeasure,numComponents]=max(mus(3,:));
-[model,cluster_labels]=gmmFitting(Y_sne,[numComponents,2]);
+disp('Press any key to continue');
+pause
+
+% ----validation of the clustering-------
+label=labels+1;
+[mus_sne,stds_sne]=cluster_evaluation(Y_sne,label,[10 1 4]);
+[mus_tsne,std_tsne]=cluster_evaluation(Y_tsne,label,[10 1 4]);
+cluster_comparison(mus_sne,stds_sne,mus_tsne,std_tsne);
 %% print and save data
 
 
