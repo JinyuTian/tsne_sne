@@ -26,7 +26,8 @@ Y_tsne = tsne(x, labels, no_dims, initial_dims, perp);
 Y_sne = sne(x, labels, no_dims, perp);
 %% CLUSTERING
 [mus,stds]=cluster_evaluation(Y_tsne,labels,[10 1 5]);
-[model,cluster_labels]=gmmFitting(Y_tsne,[min(mus(3,:)),2]);
+[minFmeasure,numComponents]=min(mus(3,:));
+[model,cluster_labels]=gmmFitting(Y_tsne,[numComponent,2]);
 %% print and save data
 
 
