@@ -28,10 +28,18 @@ Y_sne = sne(x, labels, no_dims, perp);
 %evaluation of the algorithm
 label=labels+1;
 numComponents=max(label);
-[model_sne,cluster_labels_sne]=gmmFitting(Y_sne,[numComponents 2]);
-[model_tsne,cluster_labels_tsne]=gmmFitting(Y_tsne,[numComponents 2]);
-error_sne=labelComparison(label,cluster_labels_sne)/length(label)
-error_tsne=labelComparison(label,cluster_labels_tsne)/length(label)
+error_sne=zeros(10,1);
+error_tsne=zeros(10,1);
+for i=1:10
+    [model_sne,cluster_labels_sne]=gmmFitting(Y_sne,[numComponents 2]);
+    [model_tsne,cluster_labels_tsne]=gmmFitting(Y_tsne,[numComponents 2]);
+    error_sne(i)=labelComparison(label,cluster_labels_sne)/length(label);
+    error_tsne(i)=labelComparison(label,cluster_labels_tsne)/length(label);
+end
+disp('Error ratio of SNE')
+mean(error_sne)
+disp('Error ratio of tSNE')
+mean(error_tsne)
 
 disp('Press any key to continue');
 pause
