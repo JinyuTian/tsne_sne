@@ -1,125 +1,35 @@
-function [mus,stds]=cluster_evaluation(X,labels,para)
-%   input
-%       labels: 0 for no-labels, labels >= 0
-%       para:[repeats,Kmin, Kmax]
-%           repeats: times for iteration in 
-%           Kmin and Kmax: minimum and maximum numbers of clusters
-%   
-%   output:
-%       mus: 3-by-repeats matrix of aic bic and f-measure mean
-%       stds: 3-by-repeats matrix of aic bic and f-meausre standard
-%       variance
-%       if there exists points without label, only return f-measure
-%       outcomes
-% 
+function cluster_evaluation(Y_sne,Y_tsne,label,para)
+%para is the utilization of the code: evaluation or validation
 
+if strcmp(lower(para),'evaluation')
+    %using the number of the labels to do clustering evaluation
+    numComponents_sne=max(label);
+    numComponents_tsne=max(label);
 
-if ~exist('X', 'var')||~exist('labels','var')
-    disp('Please enter the data and the labels')
-end
-if ~exist('para','var')
-    disp('The default value could generate erros')
-    para=[15 1 10]
-end
+    %using the number of the labels we got from F1-measure to do clusering evaluation
+%     [mus_sne,stds_sne]=cluster_validation(Y_sne,label,[30 1 5]);
+%     [mus_tsne,std_tsne]=cluster_validation(Y_tsne,label,[30 1 5]);
+%     [temp,numComponents_tsne]=max(mus_tsne(3,:));
+%     [temp,numComponents_sne]=max(mus_sne(3,:));
+    
+    numComponents_sne
+    numComponents_tsne
 
-
-%% GMM clustering
-if min(labels)>=0
-    % Fit data to GMM model with full covariance matrix
-    repeats=para(1);
-    KRange=para(2):para(3);
-    mus=zeros(3,length(KRange));
-    stds=zeros(3,length(KRange));
-    temp=zeros(3,repeats);
-    % run GMM 
-    for i=para(2):para(3)
-        for j=1:repeats
-            obj{i}=gmdistribution.fit(X,i,'Start','randSample','CovType','full');
-            %AIC and BIC
-            temp(1,j)= obj{i}.AIC;
-            temp(2,j)= obj{i}.BIC;
-            %F-measure
-            post_p=[];
-            for k=1:i
-               gm=gmdistribution(obj{i}.mu(k,:),obj{i}.Sigma(:,:,k),1);
-               post_p=[post_p pdf(gm,X)*obj{i}.PComponents(k)];
-            end
-            [Y,cluster_labels]=max(post_p,[],2);
-            temp(3,j)=gmmFmeasure(cluster_labels,labels);
-        end
-        mus(1,i)=mean(temp(1,:));
-        mus(2,i)=mean(temp(2,:));
-        mus(3,i)=mean(temp(3,:));
-        stds(1,i)=std(temp(1,:));
-        stds(2,i)=std(temp(2,:));
-        stds(3,i)=std(temp(3,:));
+    error_sne=zeros(10,1);
+    error_tsne=zeros(10,1);
+    for i=1:10
+        [model_sne,cluster_labels_sne]=gmmFitting(Y_sne,[numComponents_sne 2]);
+        [model_tsne,cluster_labels_tsne]=gmmFitting(Y_tsne,[numComponents_tsne 2]);
+        error_sne(i)=labelComparison(label,cluster_labels_sne)/length(label);
+        error_tsne(i)=labelComparison(label,cluster_labels_tsne)/length(label);
     end
-    % Plot AIC BIC
-    figure()
-    errorbar(KRange,mus(1,:),stds(1,:),'r--s');
-    hold on
-    errorbar(KRange,mus(2,:),stds(2,:),'g--s');
-    legend('AIC','BIC');
-    title('AIC and BIC using GMM')
-    ylabel('AIC & BIC')
-    xlabel('Number of clusters')
-    figure()
-    errorbar(KRange,mus(3,:),stds(3,:),'g--s')
-    title('F1-Measure using GMM')
-    ylabel('F1-Measure')
-    xlabel('Number of clusters')
-
-    %Plot the best fitting
-    figure()
-    [minAIC,numComponents] = min(mus(1,:));
-    if size(X,2)==2
-        scatter(X(:,1),X(:,2),10,labels,'filled')
-        hold on
-        h=ezcontour(@(x,y)pdf(obj{numComponents},[x y]),[min(X(:,1))-2, max(X(:,1))+2],[min(X(:,2))-2, max(X(:,2))+2]);
-        title('Best fitting according to AIC')
-    end
-elseif minlabels==0
-        % Fit data to GMM model with full covariance matrix
-    repeats=para(1);
-    KRange=para(2):para(3);
-    mus=zeros(1,length(KRange));
-    stds=zeros(1,length(KRange));
-    temp=zeros(1,repeats);
-    % run GMM 
-    for i=para(2):para(3)
-        for j=1:repeats
-            obj{i}=gmdistribution.fit(X,i,'Start','randSample','CovType','full');
-            %F-measure
-            post_p=[];
-            %genearte labels
-            for k=1:i
-               gm=gmdistribution(obj{i}.mu(k,:),obj{i}.Sigma(:,:,k),1);
-               post_p=[post_p pdf(gm,X)*obj{i}.PComponents(k)];
-            end
-            [Y,cluster_labels]=max(post_p,[],2);
-            temp(1,j)=gmmFmeasure(cluster_labels,labels);
-        end
-        mus(1,i)=mean(temp(1,:));
-        stds(1,i)=std(temp(1,:));
-    end
-    figure()
-    errorbar(KRange,mus(1,:),stds(1,:),'g--s')
-    title('F1-Measure using GMM')
-    ylabel('F1-Measure')
-    xlabel('Number of clusters')
-
-    %Plot the best fitting
-    figure()
-    [minAIC,numComponents] = min(mus(1,:));
-    if size(X,2)==2
-        scatter(X(:,1),X(:,2),10,labels,'filled')
-        hold on
-        h=ezcontour(@(x,y)pdf(obj{numComponents},[x y]),[min(X(:,1))-2, max(X(:,1))+2],[min(X(:,2))-2, max(X(:,2))+2]);
-        title('Best fitting according to F1-measure')
-    end
+    disp('Error ratio of SNE')
+    mean(error_sne)
+    disp('Error ratio of tSNE')
+    mean(error_tsne)
 else
-    disp('Invalid labels')
-end
-
-
+    % ----validation of the clustering-------
+    [mus_sne,stds_sne]=cluster_validation(Y_sne,label,[20 1 4]);
+    [mus_tsne,std_tsne]=cluster_validation(Y_tsne,label,[20 1 4]);
+    cluster_comparison(mus_sne,stds_sne,mus_tsne,std_tsne);
 end

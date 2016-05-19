@@ -12,6 +12,9 @@ function fmeasure=gmmFmeasure(cluster_labels, labels)
     M=length(cluster_labels);
 
     nc=max(max(labels)); %number of the classes
+    if (min(labels)==0)
+        disp('Semisupervised labeling')
+    end
     nk=max(max(cluster_labels)); %number of the clusters
     if nc==0
         disp('Please label part of the data points');
