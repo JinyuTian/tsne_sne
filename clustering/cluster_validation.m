@@ -34,7 +34,7 @@ if min(labels)>=0
     % run GMM 
     for i=para(2):para(3)
         for j=1:repeats
-            obj{i}=gmdistribution.fit(X,i,'Start','randSample','CovType','full');
+            obj{i}=gmdistribution.fit(X,i,'Start','randSample','CovType','full','Regularize',0.05);
             %AIC and BIC
             temp(1,j)= obj{i}.AIC;
             temp(2,j)= obj{i}.BIC;
@@ -65,7 +65,7 @@ elseif minlabels==0
     % run GMM 
     for i=para(2):para(3)
         for j=1:repeats
-            obj{i}=gmdistribution.fit(X,i,'Start','randSample','CovType','full');
+            obj{i}=gmdistribution.fit(X,i,'Start','randSample','CovType','full','Regularize',0.05);
             %F-measure
             post_p=[];
             %genearte labels

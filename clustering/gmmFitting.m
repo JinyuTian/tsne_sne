@@ -9,9 +9,9 @@ function [model,cluster_labels]=gmmFitting(X,para)
 
     switch para(2)
         case 1
-            obj=gmdistribution.fit(X,para(1),'Start','randSample','CovType','diagonal');
+            obj=gmdistribution.fit(X,para(1),'Start','randSample','CovType','diagonal','Regularize',0.05);
         case 2
-            obj=gmdistribution.fit(X,para(1),'Start','randSample','CovType','full');
+            obj=gmdistribution.fit(X,para(1),'Start','randSample','CovType','full','Regularize',0.05);
         otherwise
             disp('Invalid covariance matrix type')
     end
