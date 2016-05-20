@@ -11,9 +11,6 @@ if strcmp(lower(para),'evaluation')
     [mus_tsne,std_tsne]=cluster_validation(Y_tsne,label,[30 1 6]);
     [temp,numComponents_tsne]=max(mus_tsne(3,:));
     [temp,numComponents_sne]=max(mus_sne(3,:));
-    
-    numComponents_sne
-    numComponents_tsne
 
     error_sne=zeros(10,1);
     error_tsne=zeros(10,1);
@@ -23,6 +20,8 @@ if strcmp(lower(para),'evaluation')
         error_sne(i)=labelComparison(label,cluster_labels_sne)/length(label);
         error_tsne(i)=labelComparison(label,cluster_labels_tsne)/length(label);
     end
+    numComponents_sne
+    numComponents_tsne
     disp('Error ratio of SNE')
     mean(error_sne)
     disp('Error ratio of tSNE')

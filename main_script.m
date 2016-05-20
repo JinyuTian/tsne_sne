@@ -30,7 +30,7 @@ para='evaluation'; %validation or evaluation
 cluster_evaluation(Y_sne,Y_tsne,label,para);
 %% CLASSIFICATION
 %training data
-training_ratio=0.1;
+training_ratio=0.5;
 ind=randperm(size(Y_tsne,1));
 train_sne=Y_sne(ind(1:ceil(size(Y_sne,1)*training_ratio)),:);
 test_sne=Y_sne(ind(ceil(size(Y_sne,1)*training_ratio):end),:);
@@ -46,8 +46,8 @@ NrClass_sne=zeros(10,10);
 NrSv_tsne=zeros(10,10);
 NrClass_tsne=zeros(10,10);
 
-for i=1:1
-    for j=1:1
+for i=1:2
+    for j=1:2
         option=strcat('-s 1 -t 2 -c 0.5 -g ',num2str(i*0.1),' -n ',num2str(j*0.1));
         %nu-svm
         model_sne=svmtrain(train_labels,train_sne,option); %-s method -t kernel type -c cost -g gamma -v n-fold cross validation -n nu
@@ -65,8 +65,10 @@ for i=1:1
     end
 end
 %%
+model_sne=svmtrain(train_labels,train_sne,'-s 1 -t 2 -c 0.5 -g 0.1 -n 0.1');
 figure()
 plotBoundary(Y_sne,labels,model_sne);
+model_tsne=svmtrain(train_labels,train_tsne,'-s 1 -t 2 -c 0.5 -g 0.1 -n 0.1');
 figure()
 plotBoundary(Y_tsne,labels,model_tsne)
 %% print and save data

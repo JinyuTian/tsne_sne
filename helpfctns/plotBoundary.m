@@ -19,7 +19,7 @@ color=color*255/max(color);
 color=reshape(color,length(rangeX),length(rangeY));
 
 %edge processing
-H=fspecial('disk',10);
+H=fspecial('disk',ceil(model.Parameters(4)*100));
 color=imfilter(color,H,'replicate');
 
 %plot the decision
