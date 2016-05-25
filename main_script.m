@@ -30,39 +30,13 @@ para='validation'; %validation or evaluation
 cluster_evaluation(Y_sne,Y_tsne,label,para);
 %% CLASSIFICATION
 %training and testing data
-training_ratio=0.5;
+training_ratio=0.3;
 [train_sne,train_tsne,test_sne,test_tsne,test_labels,train_labels]=train_test_generation(training_ratio,Y_sne,Y_tsne,labels);
+%Hyperparameter evaluation
 [accuracy_sne,accuracy_tsne,NrSv_sne,NrSv_tsne,NrClass_sne,NrClass_tsne]=nv_svm_evaluation(train_sne,test_sne,train_tsne,test_tsne,train_labels,test_labels);
-%% plot 
-figure()
-subplot(2,2,1)
-[nu,sigma]=meshgrid(0.1:0.1:0.5,5*10e-5:5*10e-5:0.05);
-contourf(sigma,nu,NrSv_sne,'LineStyle', 'none');
-title('Numbers of SV SNE')
-xlabel('Sigma')
-ylabel('Nu')
-colorbar
-subplot(2,2,2)
-[nu,sigma]=meshgrid(0.1:0.1:0.5,5*10e-5:5*10e-5:0.05);
-contourf(sigma,nu,NrSv_tsne,'LineStyle', 'none');
-title('Numbers of SV t-SNE')
-xlabel('Sigma')
-ylabel('Nu')
-colorbar
-subplot(2,2,3)
-[nu,sigma]=meshgrid(0.1:0.1:0.5,5*10e-5:5*10e-5:0.05);
-contourf(sigma,nu,accuracy_sne,'LineStyle', 'none');
-title('Accuracy of nu-SVM in SNE')
-xlabel('Sigma')
-ylabel('Nu')
-colorbar
-subplot(2,2,4)
-[nu,sigma]=meshgrid(0.1:0.1:0.5,5*10e-5:5*10e-5:0.05);
-contourf(sigma,nu,accuracy_tsne,'LineStyle', 'none');
-title('Accuracy of nu-SVM in tSNE')
-xlabel('Sigma')
-ylabel('Nu')
-colorbar
+classification_eval_plot([accuracy_sne,accuracy_tsne,NrSv_sne,NrSv_tsne,NrClass_sne,NrClass_tsne]);
+%% Training ratio evaluation
+training_ratio_eval(labels, Y_tsne,Y_sne);
 
 %%
 model_tsne=svmtrain(train_labels,train_tsne,'-s 1 -t 2 -c 0.5 -g 0.1 -n 0.1');
