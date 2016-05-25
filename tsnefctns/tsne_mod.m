@@ -1,4 +1,4 @@
-function [ydata, cost] = tsne(X, labels, no_dims, initial_dims, perplexity)
+function [ydata, cost] = tsne_mod(X, labels, no_dims, initial_dims, perplexity)
 %TSNE Performs symmetric t-SNE on dataset X
 %
 %   mappedX = tsne(X, labels, no_dims, initial_dims, perplexity)
