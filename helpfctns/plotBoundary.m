@@ -27,13 +27,13 @@ contourf(rangeX,rangeY,color,50, 'LineStyle', 'none')
 hold on
 %plot the data points
 
-colorspec='ymcrgbk';
+%colorspec='ymcrgbk';
 for i=min(labels):max(labels)
    ind=find(labels==i);
-   plot(data(ind,1), data(ind,2), 'ko', 'MarkerFaceColor', colorspec(i-min(labels)+1)); hold on
+   scatter(data(ind,1), data(ind,2), 40,'o','MarkerEdgeColor','k','LineWidth',1.5,'MarkerFaceColor', colorSpec(i-min(labels)+1)); hold on %, 'MarkerFaceColor', colorSpec(i-min(labels)+1)
 end
 %plot the Support Vector
-scatter(SVs(:,1),SVs(:,2),90,'o','MarkerEdgeColor', [1 1 1], 'MarkerEdgeColor', 'w', 'LineWidth', 1.5);
+scatter(SVs(:,1),SVs(:,2),90,'o', 'MarkerEdgeColor', 'w', 'LineWidth', 1.5);
 
 
 

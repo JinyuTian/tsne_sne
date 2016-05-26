@@ -11,7 +11,7 @@ if ~isempty(labels)
     elseif no_dims == 2
         scatter(Y(:,1), Y(:,2),9, labels, 'filled');
     else
-        scatter3(Y(:,1), Y(:,2), Y(:,3), 40, labels, 'filled');
+        scatter3(Y(:,1), Y(:,2), Y(:,3), 9, labels, 'filled');
     end
     axis equal tight
     drawnow
