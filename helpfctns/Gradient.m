@@ -18,7 +18,10 @@ colorbar;
 xlabel('High dimensional distance >')
 ylabel('Low dimensional distane >')
 title('Gradient of t-SNE')
-%%
+set(gca, 'XTick', []);
+set(gca, 'YTick', []);
+
+
 for i = 1:length(d)
     for j = 1:(length(dl))
         q=normpdf(d(i),0,8);
@@ -32,3 +35,5 @@ colorbar;
 xlabel('High dimensional distance >')
 ylabel('Low dimensional distane >')
 title('Gradient of SNE')
+set(gca, 'XTick', []);
+set(gca, 'YTick', []);
