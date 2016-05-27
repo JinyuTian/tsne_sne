@@ -23,7 +23,7 @@ no_dims = 2;                % the dimension of the lower dimensional space
 %% tsne
 Y_tsne = tsne(x, labels, no_dims, initial_dims, perp);
 %% sne
-Y_sne = sne_mod(x, labels, no_dims, perp);
+Y_sne = sne(x, labels, no_dims, perp);
 %% CLUSTERING
 label=labels+1; %Only of Iris model
 para='validation'; %validation or evaluation
