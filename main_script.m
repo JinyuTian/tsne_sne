@@ -12,7 +12,7 @@ type='brokenswiss';     % 'swiss', 'changing_swiss' '3d_clusters' 'twinpeaks' 'd
 N = 1;      % number of extra dimensions
 % X_embedd = adding_dimensions(x,1) 
 %% Real data
-dataset = 'iris' % 'mnist', 'iris'
+dataset = 'mnist' % 'mnist', 'iris'
 [x, labels] = load_dataset(dataset); 
 
 %% RUNNING T-SNE + SNE
@@ -34,7 +34,7 @@ training_ratio=0.3;
 [train_sne,train_tsne,test_sne,test_tsne,test_labels,train_labels]=train_test_generation(training_ratio,Y_sne,Y_tsne,labels);
 %Hyperparameter evaluation
 [accuracy_sne,accuracy_tsne,NrSv_sne,NrSv_tsne,NrClass_sne,NrClass_tsne]=nv_svm_evaluation(train_sne,test_sne,train_tsne,test_tsne,train_labels,test_labels);
-classification_eval_plot([accuracy_sne,accuracy_tsne,NrSv_sne,NrSv_tsne,NrClass_sne,NrClass_tsne]);
+classification_eval_plot(accuracy_sne,accuracy_tsne,NrSv_sne,NrSv_tsne);
 %% Training ratio evaluation
 training_ratio_eval(labels, Y_tsne,Y_sne);
 
